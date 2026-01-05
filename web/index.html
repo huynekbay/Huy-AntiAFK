@@ -1,0 +1,14 @@
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script>
+firebase.initializeApp({
+  databaseURL: "FIREBASE_URL_CUA_BAN"
+});
+
+function gen(uid){
+ let key="HUY-"+Math.random().toString(36).substr(2,6).toUpperCase();
+ let exp=Math.floor(Date.now()/1000)+86400;
+ firebase.database().ref("keys/"+uid).set({key:key,expire:exp});
+ alert(key);
+}
+</script>
