@@ -155,3 +155,100 @@ ToggleBtn.MouseButton1Click:Connect(function()
 end)
 
 print("✅ Huy Anti-AFK | Loaded successfully")
+--Kết nối Firebase + Stats
+local HttpService = game:GetService("HttpService")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local DB = "https://huy-antiafk-default-rtdb.asia-southeast1.firebasedatabase.app"
+
+local function get(p)
+	return HttpService:JSONDecode(game:HttpGet(DB..p..".json"))
+end
+
+local function patch(p, d)
+	HttpService:RequestAsync({
+		Url = DB..p..".json",
+		Method = "PATCH",
+		Headers = {["Content-Type"]="application/json"},
+		Body = HttpService:JSONEncode(d)
+	})
+end
+
+local uid = tostring(player.UserId)
+--UI THỐNG KÊ 
+local gui = Instance.new("ScreenGui", game.CoreGui)
+gui.Name = "HuyAntiAFK_UI"
+
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.fromScale(0.25,0.2)
+frame.Position = UDim2.fromScale(0.05,0.3)
+frame.BackgroundColor3 = Color3.fromRGB(20,20,20)
+frame.Active = true
+frame.Draggable = true
+
+local title = Instance.new("TextLabel", frame)
+title.Size = UDim2.fromScale(1,0.25)
+title.Text = "Huy Anti-AFK"
+title.BackgroundTransparency = 1
+title.TextColor3 = Color3.new(1,1,1)
+title.TextScaled = true
+
+local function make(text,y)
+	local t = Instance.new("TextLabel", frame)
+	t.Position = UDim2.fromScale(0,y)
+	t.Size = UDim2.fromScale(1,0.25)
+	t.Text = text
+	t.BackgroundTransparency = 1
+	t.TextColor3 = Color3.fromRGB(200,200,200)
+	t.TextScaled = true
+	return t
+end
+
+local u = make("Users: ...",0.25)
+local c = make("Checks: ...",0.5)
+local a = make("Active: ...",0.75)
+
+task.spawn(function()
+	while true do
+		local s = get("/stats")
+		u.Text = "Users: "..s.totalUsers
+		c.Text = "Checks: "..s.totalChecks
+		a.Text = "Active: "..s.activeUsers
+		task.wait(5)
+	end
+end)
+
+--UI THỐNG KÊ 
+local keyGui = Instance.new("ScreenGui", game.CoreGui)
+local f = Instance.new("Frame", keyGui)
+f.Size = UDim2.fromScale(0.3,0.25)
+f.Position = UDim2.fromScale(0.35,0.35)
+f.BackgroundColor3 = Color3.fromRGB(15,15,15)
+
+local box = Instance.new("TextBox", f)
+box.Size = UDim2.fromScale(0.8,0.2)
+box.Position = UDim2.fromScale(0.1,0.4)
+box.PlaceholderText = "Enter key"
+
+local btn = Instance.new("TextButton", f)
+btn.Size = UDim2.fromScale(0.5,0.2)
+btn.Position = UDim2.fromScale(0.25,0.65)
+btn.Text = "VERIFY"
+
+btn.MouseButton1Click:Connect(function()
+	local data = get("/keys/"..uid)
+	if not data then btn.Text="NO KEY"; return end
+	if data.key ~= box.Text then btn.Text="WRONG"; return end
+	if os.time() > data.expire then btn.Text="EXPIRED"; return end
+	keyGui:Destroy()
+end)
+
+--ANTI-afk
+local VirtualUser = game:GetService("VirtualUser")
+player.Idled:Connect(function()
+	VirtualUser:Button2Down(Vector2.new(), workspace.CurrentCamera.CFrame)
+	task.wait(1)
+	VirtualUser:Button2Up(Vector2.new(), workspace.CurrentCamera.CFrame)
+end)
+--
