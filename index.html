@@ -7,6 +7,7 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
+
 <style>
 body{
   background:#0f0f0f;
@@ -46,20 +47,22 @@ button{
 
 <script>
 var firebaseConfig = {
-  apiKey: "API_KEY_CUA_BAN",
-  authDomain: "PROJECT.firebaseapp.com",
-  databaseURL: "DATABASE_URL_CUA_BAN",
-  projectId: "PROJECT_ID",
-  storageBucket: "PROJECT.appspot.com",
-  messagingSenderId: "SENDER_ID",
-  appId: "APP_ID"
+  apiKey: "AIzaSyxxxx",
+  authDomain: "huy-antiafk.firebaseapp.com",
+  databaseURL: "https://huy-antiafk-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "huy-antiafk",
+  storageBucket: "huy-antiafk.appspot.com",
+  messagingSenderId: "123456",
+  appId: "1:123456:web:abcd"
 };
+
 
 firebase.initializeApp(firebaseConfig);
 var db = firebase.database();
 
 function genKey(){
-  var uid = document.getElementById("uid").value;
+  var uid = document.getElementById("uid").value.trim();
+
   if(!uid || isNaN(uid)){
     alert("UserId không hợp lệ");
     return;
@@ -68,15 +71,16 @@ function genKey(){
   var key = "HUY-" + Math.random().toString(36).substr(2,6).toUpperCase();
   var exp = Math.floor(Date.now()/1000) + 86400;
 
-  db.ref("keys/"+uid).set({
+  db.ref("keys/" + uid).set({
     key: key,
     expire: exp
   }).then(function(){
     document.getElementById("out").innerText = "KEY: " + key;
   }).catch(function(err){
-    alert("Error: " + err.message);
+    alert(err.message);
   });
 }
+
 </script>
 </body>
 </html>
