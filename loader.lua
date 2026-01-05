@@ -2,7 +2,7 @@
 -- HUY ANTI-AFK | LOADER
 --====================================
 
-local BASE_URL = "https://raw.githubusercontent.com/USERNAME/Huy-AntiAFK/refs/heads/main/"
+local BASE_URL = "https://raw.githubusercontent.com/huynekbay/Huy-AntiAFK/refs/heads/main/"
 local VERSION_URL = BASE_URL .. "version.txt"
 local MAIN_URL = BASE_URL .. "main.lua"
 
