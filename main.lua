@@ -1,3 +1,5 @@
+local KEY_LINK = "https://huynekbay.github.io/Huy-AntiAFK/"
+
 --// Huy Anti-AFK
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
@@ -49,6 +51,35 @@ Button.BackgroundColor3 = Color3.fromRGB(255,71,87)
 Button.TextColor3 = Color3.new(1,1,1)
 Button.Font = Enum.Font.GothamBold
 
+local LinkLabel = Instance.new("TextLabel", Frame)
+LinkLabel.Size = UDim2.new(1,-40,0,30)
+LinkLabel.Position = UDim2.new(0,20,0,150)
+LinkLabel.BackgroundTransparency = 1
+LinkLabel.Text = "Get key at: huynekbay.github.io/Huy-AntiAFK"
+LinkLabel.TextColor3 = Color3.fromRGB(200,200,200)
+LinkLabel.TextScaled = true
+LinkLabel.Font = Enum.Font.Gotham
+
+local CopyBtn = Instance.new("TextButton", Frame)
+CopyBtn.Size = UDim2.new(1,-40,0,30)
+CopyBtn.Position = UDim2.new(0,20,0,185)
+CopyBtn.Text = "📋 COPY KEY LINK"
+CopyBtn.BackgroundColor3 = Color3.fromRGB(46,213,115)
+CopyBtn.TextColor3 = Color3.new(1,1,1)
+CopyBtn.Font = Enum.Font.GothamBold
+
+CopyBtn.MouseButton1Click:Connect(function()
+	if setclipboard then
+		setclipboard(KEY_LINK)
+		CopyBtn.Text = "✅ COPIED!"
+		task.wait(1.5)
+		CopyBtn.Text = "📋 COPY KEY LINK"
+	else
+		CopyBtn.Text = "❌ EXECUTOR NOT SUPPORTED"
+	end
+end)
+
+
 -- KEY CHECK
 Button.MouseButton1Click:Connect(function()
 	local key = TextBox.Text
@@ -75,4 +106,15 @@ Button.MouseButton1Click:Connect(function()
 
 	Frame.Visible = false
 	print("Key verified - Anti AFK enabled")
+end)
+local UIS = game:GetService("UserInputService")
+
+UIS.InputBegan:Connect(function(input, gp)
+	if gp then return end
+
+	if input.KeyCode == Enum.KeyCode.RightControl then
+		if Frame then
+			Frame.Visible = not Frame.Visible
+		end
+	end
 end)
