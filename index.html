@@ -5,8 +5,10 @@
 <title>Huy Anti-AFK | Get Key</title>
 
 <!-- Firebase v8 -->
+
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  
 
 <style>
 *{
@@ -73,7 +75,11 @@ button{
   cursor:pointer;
   transition:.2s;
 }
+#copyBtn{
+  background:linear-gradient(135deg,#2ed573,#1dd1a1);
+}
 
+  
 button:hover{
   transform:scale(1.03);
 }
@@ -102,7 +108,11 @@ button:hover{
   <p>Enter your Roblox UserId to get key</p>
 
   <input id="uid" placeholder="Roblox UserId (number)">
-  <button onclick="genKey()">GET KEY</button>
+<button onclick="genKey()">GET KEY</button>
+<button id="copyBtn" onclick="copyKey()" style="display:none">COPY KEY</button>
+
+<div id="out"></div>
+
 
   <div id="out"></div>
 
@@ -112,6 +122,7 @@ button:hover{
 </div>
 
 <script>
+var lastKey = "";
 var firebaseConfig = {
   apiKey: "AIzaSyxxxx",
   authDomain: "huy-antiafk.firebaseapp.com",
@@ -128,13 +139,38 @@ var db = firebase.database();
 function genKey(){
   var uid = document.getElementById("uid").value.trim();
   var out = document.getElementById("out");
+  var copyBtn = document.getElementById("copyBtn");
 
   if(!uid || isNaN(uid)){
     out.style.color = "#ff6b81";
     out.innerText = "❌ Invalid UserId";
+    copyBtn.style.display = "none";
     return;
   }
 
+  var key = "HUY-" + Math.random().toString(36).substr(2,6).toUpperCase();
+  var exp = Math.floor(Date.now()/1000) + 86400;
+
+  db.ref("keys/" + uid).set({
+    key: key,
+    expire: exp
+  }).then(function(){
+    lastKey = key;
+    out.style.color = "#2ed573";
+    out.innerText = "✅ KEY: " + key;
+    copyBtn.style.display = "block";
+  }).catch(function(err){
+    out.style.color = "#ff6b81";
+    out.innerText = "❌ " + err.message;
+    copyBtn.style.display = "none";
+  });
+}
+function copyKey(){
+  if(!lastKey) return;
+  navigator.clipboard.writeText(lastKey).then(function(){
+    alert("✅ Key copied to clipboard!");
+  });
+}
   var key = "HUY-" + Math.random().toString(36).substr(2,6).toUpperCase();
   var exp = Math.floor(Date.now()/1000) + 86400;
 
