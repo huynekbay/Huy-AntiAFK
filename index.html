@@ -1,48 +1,114 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
 <meta charset="UTF-8">
 <title>Huy Anti-AFK | Get Key</title>
 
+<!-- Firebase v8 -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
-
 <style>
+*{
+  box-sizing:border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
 body{
-  background:#0f0f0f;
+  margin:0;
+  height:100vh;
+  background:linear-gradient(135deg,#1e1e2f,#0f0f15);
+  display:flex;
+  align-items:center;
+  justify-content:center;
   color:white;
-  font-family:Arial;
+}
+
+.card{
+  width:360px;
+  background:#151522;
+  border-radius:16px;
+  padding:30px;
+  box-shadow:0 0 30px rgba(0,0,0,.6);
+  animation:fadeIn .6s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(20px)}
+  to{opacity:1; transform:translateY(0)}
+}
+
+h2{
+  margin:0;
   text-align:center;
+  color:#ff4757;
 }
-.box{
-  margin-top:80px;
+
+p{
+  text-align:center;
+  font-size:14px;
+  color:#aaa;
 }
-input,button{
+
+input{
+  width:100%;
   padding:12px;
-  margin:6px;
-  width:220px;
-  border-radius:6px;
+  margin-top:20px;
+  background:#0f0f18;
   border:none;
-}
-button{
-  background:#ff4757;
+  border-radius:8px;
   color:white;
+  outline:none;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  margin-top:15px;
+  background:linear-gradient(135deg,#ff4757,#ff6b81);
+  border:none;
+  border-radius:8px;
+  color:white;
+  font-weight:bold;
   cursor:pointer;
+  transition:.2s;
+}
+
+button:hover{
+  transform:scale(1.03);
+}
+
+#out{
+  margin-top:15px;
+  text-align:center;
+  font-weight:bold;
+  word-break:break-all;
+  color:#2ed573;
+}
+
+.footer{
+  margin-top:20px;
+  text-align:center;
+  font-size:12px;
+  color:#666;
 }
 </style>
 </head>
 
 <body>
-<div class="box">
-  <h2>🔐 Huy Anti-AFK</h2>
-  <p>Enter Roblox UserId to get key</p>
 
-  <input id="uid" placeholder="Roblox UserId">
-  <br>
+<div class="card">
+  <h2>🔐 Huy Anti-AFK</h2>
+  <p>Enter your Roblox UserId to get key</p>
+
+  <input id="uid" placeholder="Roblox UserId (number)">
   <button onclick="genKey()">GET KEY</button>
 
-  <p id="out"></p>
+  <div id="out"></div>
+
+  <div class="footer">
+    © 2025 Huy Anti-AFK
+  </div>
 </div>
 
 <script>
@@ -56,15 +122,16 @@ var firebaseConfig = {
   appId: "1:123456:web:abcd"
 };
 
-
 firebase.initializeApp(firebaseConfig);
 var db = firebase.database();
 
 function genKey(){
   var uid = document.getElementById("uid").value.trim();
+  var out = document.getElementById("out");
 
   if(!uid || isNaN(uid)){
-    alert("UserId không hợp lệ");
+    out.style.color = "#ff6b81";
+    out.innerText = "❌ Invalid UserId";
     return;
   }
 
@@ -75,14 +142,14 @@ function genKey(){
     key: key,
     expire: exp
   }).then(function(){
-    document.getElementById("out").innerText = "KEY: " + key;
+    out.style.color = "#2ed573";
+    out.innerText = "✅ KEY: " + key;
   }).catch(function(err){
-    alert(err.message);
+    out.style.color = "#ff6b81";
+    out.innerText = "❌ " + err.message;
   });
 }
-
 </script>
+
 </body>
 </html>
-
-
