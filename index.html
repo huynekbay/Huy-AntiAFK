@@ -1,130 +1,94 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Huy Anti-AFK | Get Key</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Firebase v8 -->
-
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-  
 
 <style>
-*{
-  box-sizing:border-box;
-  font-family: 'Segoe UI', sans-serif;
-}
-
 body{
   margin:0;
-  height:100vh;
-  background:linear-gradient(135deg,#1e1e2f,#0f0f15);
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
   color:white;
+  font-family:Segoe UI,Arial;
+  text-align:center;
 }
-
-.card{
-  width:360px;
-  background:#151522;
-  border-radius:16px;
+.container{
+  max-width:420px;
+  margin:80px auto;
+  background:#111;
   padding:30px;
-  box-shadow:0 0 30px rgba(0,0,0,.6);
-  animation:fadeIn .6s ease;
+  border-radius:14px;
+  box-shadow:0 0 40px rgba(0,0,0,.6);
 }
-
-@keyframes fadeIn{
-  from{opacity:0; transform:translateY(20px)}
-  to{opacity:1; transform:translateY(0)}
+h1{
+  margin-bottom:10px;
 }
-
-h2{
-  margin:0;
-  text-align:center;
-  color:#ff4757;
-}
-
 p{
-  text-align:center;
+  color:#ccc;
   font-size:14px;
-  color:#aaa;
 }
-
 input{
   width:100%;
-  padding:12px;
-  margin-top:20px;
-  background:#0f0f18;
-  border:none;
+  padding:14px;
+  margin-top:15px;
   border-radius:8px;
-  color:white;
+  border:none;
   outline:none;
+  font-size:16px;
 }
-
 button{
   width:100%;
-  padding:12px;
-  margin-top:15px;
-  background:linear-gradient(135deg,#ff4757,#ff6b81);
+  padding:14px;
+  margin-top:12px;
   border:none;
   border-radius:8px;
-  color:white;
-  font-weight:bold;
+  font-size:15px;
   cursor:pointer;
-  transition:.2s;
+  background:#ff4757;
+  color:white;
 }
 #copyBtn{
-  background:linear-gradient(135deg,#2ed573,#1dd1a1);
+  display:none;
+  background:#2ed573;
 }
-
-  
-button:hover{
-  transform:scale(1.03);
-}
-
 #out{
   margin-top:15px;
-  text-align:center;
   font-weight:bold;
-  word-break:break-all;
-  color:#2ed573;
 }
-
 .footer{
   margin-top:20px;
-  text-align:center;
   font-size:12px;
-  color:#666;
+  color:#888;
 }
 </style>
 </head>
 
 <body>
 
-<div class="card">
-  <h2>🔐 Huy Anti-AFK</h2>
+<div class="container">
+  <h1>🔐 Huy Anti-AFK</h1>
   <p>Enter your Roblox UserId to get key</p>
 
-  <input id="uid" placeholder="Roblox UserId (number)">
-<button onclick="genKey()">GET KEY</button>
-<button id="copyBtn" onclick="copyKey()" style="display:none">COPY KEY</button>
-
-<div id="out"></div>
-
+  <input id="uid" placeholder="Roblox UserId (number only)">
+  <button onclick="genKey()">GET KEY</button>
+  <button id="copyBtn" onclick="copyKey()">📋 COPY KEY</button>
 
   <div id="out"></div>
 
   <div class="footer">
-    © 2025 Huy Anti-AFK
+    Key expires after 24 hours
   </div>
 </div>
 
 <script>
-var lastKey = "";
+/* ===== FIREBASE CONFIG ===== */
 var firebaseConfig = {
-  apiKey: "AIzaSyxxxx",
+  apiKey: "AIzaSyXXXX",
   authDomain: "huy-antiafk.firebaseapp.com",
   databaseURL: "https://huy-antiafk-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "huy-antiafk",
@@ -136,6 +100,9 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 var db = firebase.database();
 
+/* ===== LOGIC ===== */
+var lastKey = "";
+
 function genKey(){
   var uid = document.getElementById("uid").value.trim();
   var out = document.getElementById("out");
@@ -143,7 +110,7 @@ function genKey(){
 
   if(!uid || isNaN(uid)){
     out.style.color = "#ff6b81";
-    out.innerText = "❌ Invalid UserId";
+    out.innerText = "❌ Invalid Roblox UserId";
     copyBtn.style.display = "none";
     return;
   }
@@ -165,24 +132,11 @@ function genKey(){
     copyBtn.style.display = "none";
   });
 }
+
 function copyKey(){
   if(!lastKey) return;
   navigator.clipboard.writeText(lastKey).then(function(){
     alert("✅ Key copied to clipboard!");
-  });
-}
-  var key = "HUY-" + Math.random().toString(36).substr(2,6).toUpperCase();
-  var exp = Math.floor(Date.now()/1000) + 86400;
-
-  db.ref("keys/" + uid).set({
-    key: key,
-    expire: exp
-  }).then(function(){
-    out.style.color = "#2ed573";
-    out.innerText = "✅ KEY: " + key;
-  }).catch(function(err){
-    out.style.color = "#ff6b81";
-    out.innerText = "❌ " + err.message;
   });
 }
 </script>
